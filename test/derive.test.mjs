@@ -85,6 +85,9 @@ test('他主动给的名字、她自己改口的叫法都算称呼', () => {
   assert.equal(pickName('他不要我叫“搭屋的”，也不要“开灯的”。'), null)
   // 代词不算称呼
   assert.equal(pickName('以后叫他他吧'), null)
+  // 2026-11-04：「他名字的我不拆」被当成给他起名，名字变成「的我不拆」
+  assert.equal(pickName('带他名字的我不拆'), null)
+  assert.equal(pickName('他名字的我不拆，别乱叫'), null)
 })
 
 test('needs 只有三个键，且绝不出现好感度类字段', () => {
