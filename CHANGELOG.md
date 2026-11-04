@@ -1,3 +1,8 @@
+## 0.1.64 — 2026-11-05
+
+- `her_say` 加 `deliver`：她自己决定开口的时候，这句话可以真的发到主人 QQ 私聊（`channels.qq.ownerId` 第一个号）。不调就不发。
+- 主动开口的参数改成「给她空当」而不是「按点提醒」：`proactive.minIdleHours` 2 小时、`cooldownHours` 3；没有「必须说」的配额。
+
 ## 0.1.63 — 2026-11-04
 
 - `douyin_look` 的 `open` 真的能拿到画面了：详情接口在搜索页上下文常常返回空（`aweme_detail: null`）或 HTML，所以加一条兜底——打开那一条的页面，从 DOM 读文案、作者和 `video.currentSrc`，再抽三帧。

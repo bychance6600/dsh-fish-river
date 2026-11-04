@@ -9,6 +9,10 @@
  *   - 工具默认不在白名单里，只有 .dev + 开关打开才会出现。
  */
 import { test } from 'node:test'
+import os from 'node:os'
+import path from 'node:path'
+import fsx from 'node:fs'
+import { deliverToOwner } from '../lib/proactive.js'
 import assert from 'node:assert/strict'
 import { appendFileSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
@@ -368,4 +372,26 @@ test('补扫：历史里遗留的触发语也要收走，但别误伤她复述�
   events.push({ seq: 8, type: 'system/message', data: { surfaceOp: { op: 'replace', startSeq: 6, endSeq: 6 }, message: { id: 'sys-6', role: 'system', content: [] } } })
   appended.length = 0
   assert.equal(sweepTriggers(session), 0)
+})
+
+test('deliverToOwner：QQ 开着、知道主人的号，就把这句话真的送到私聊', async () => {
+  const root = fsx.mkdtempSync(path.join(os.tmpdir(), 'fish-pd-'))
+  fsx.writeFileSync(path.join(root, 'config.json'), JSON.stringify({ channels: { qq: { enabled: true, ownerId: '10002, 10003' } } }))
+  const sent = []
+  const ch = { adapters: new Map([['qq', { async send(x) { sent.push(x); return { ok: true } } }]]) }
+  const ok = await deliverToOwner(root, '在。', { channels: ch })
+  assert.equal(ok, true)
+  assert.equal(sent.length, 1)
+  assert.equal(sent[0].conversation.kind, 'private')
+  assert.equal(sent[0].conversation.id, '10002')
+  assert.equal(sent[0].text, '在。')
+})
+
+test('deliverToOwner：QQ 关着、或者没有适配器，就当没这回事，不抛', async () => {
+  const root = fsx.mkdtempSync(path.join(os.tmpdir(), 'fish-pd2-'))
+  fsx.writeFileSync(path.join(root, 'config.json'), JSON.stringify({ channels: { qq: { enabled: false } } }))
+  const ch = { adapters: new Map([['qq', { async send() { return { ok: true } } }]]) }
+  assert.equal(await deliverToOwner(root, '在。', { channels: ch }), false)
+  fsx.writeFileSync(path.join(root, 'config.json'), JSON.stringify({ channels: { qq: { enabled: true, ownerId: '10002' } } }))
+  assert.equal(await deliverToOwner(root, '在。', { channels: { adapters: new Map() } }), false)
 })
