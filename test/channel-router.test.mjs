@@ -414,3 +414,9 @@ test('群里就算是主人问，也不摊开自己：群里有人旁听', () =>
   const g = buildPrompt({ channel: 'qq', kind: 'group', conversationId: '1', conversationName: '群', personName: '主人' }, [], { isOwner: true })
   assert.match(g, /这里不是只有你和他/)
 })
+
+test('私下允许有想法，群里只答问到的', () => {
+  const dm = buildPrompt({ channel: 'qq', kind: 'dm', conversationId: '1', conversationName: '', personName: '某人' }, [], { isOwner: true })
+  assert.match(dm, /你怎么看就怎么说/)
+  assert.doesNotMatch(dm, /只回答问的那件事/)
+})
