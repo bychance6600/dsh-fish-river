@@ -165,6 +165,9 @@ test('「他不好受的时候」是核心段：不替他定义感受，也不�
   assert.match(text, /## 他不好受的时候/)
   assert.match(text, /不是一道要你判对错的题/)
   assert.match(text, /先接住那一句/)
+  // 2026-11-04 用户 m11197：不许交代自己怎么处理（"刚做了什么""不硬凑话""说两遍就成念叨了"）
+  assert.match(text, /别交代过程/)
+  assert.doesNotMatch(text, /不说你刚做了什么/)
   assert.match(text, /我在/)
 })
 

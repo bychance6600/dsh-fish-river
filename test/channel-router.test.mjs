@@ -410,6 +410,11 @@ test('跟别人说话时不必交代自己怎么想；跟主人可以', () => {
   assert.doesNotMatch(o, /不用交代你怎么想/)
 })
 
+test('私聊提示词要求直接说，不交代她自己怎么处理', () => {
+  const p = buildPrompt(groupMsg({ kind: 'dm', channelId: 'qq' }), [], { isOwner: true })
+  assert.match(p, /不用交代你怎么处理/)
+})
+
 test('群里就算是主人问，也不摊开自己：群里有人旁听', () => {
   const g = buildPrompt({ channel: 'qq', kind: 'group', conversationId: '1', conversationName: '群', personName: '主人' }, [], { isOwner: true })
   assert.match(g, /这里不是只有你和他/)
