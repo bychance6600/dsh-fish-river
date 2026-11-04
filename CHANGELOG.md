@@ -1,3 +1,8 @@
+## 0.1.62 — 2026-11-04
+
+- 修 `douyin_look` 没挂上：`lib/index.js` 漏了 `import { registerDouyinLook }`，注册时抛 `registerDouyinLook is not defined`，她的工具面里只有名字、没有参数。
+- `douyin_look` 加 `open`：按词找到之后真打开第一条，取文案、抽三帧，把图片路径递给她自己 `read_image`。（「只给标题还是报纸放桌上。」）
+
 ## 0.1.61 — 2026-11-04
 
 - `douyin_look` 支持按词找：给一个词就走站内搜索页，把那条视频本身拿回来（不是推荐流里的"相关"）。

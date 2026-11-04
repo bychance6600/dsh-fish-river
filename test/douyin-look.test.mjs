@@ -176,3 +176,28 @@ test('按词找：搜不到就说搜不到，不说"平台没给"', async () => 
   assert.equal(r.ok, false)
   assert.match(r.note, /什么都没搜到/)
 })
+
+test('open：按词找到之后真去打开第一条，拿不到画面就说没拿到', async () => {
+  const t = {
+    state: { navigated: '' },
+    async start() { return { ok: true } },
+    async navigate(url) { this.state.navigated = url; return { ok: true } },
+    async evaluate(expr) {
+      if (String(expr).includes('/aweme/detail')) {
+        return { ok: true, value: JSON.stringify({ aweme_detail: { aweme_id: '7703602183127797026', desc: '徒步第 300 天', author: { nickname: '卡尔' }, video: {} } }) }
+      }
+      if (String(expr).includes('/video/')) {
+        return { ok: true, value: JSON.stringify([{ href: '//www.douyin.com/video/7703602183127797026', txt: '03:43 262.2万 徒步第 300 天' }]) }
+      }
+      return { ok: true, value: '{}' }
+    },
+    async close() { return { ok: true } },
+  }
+  const root = tmpRoot()
+  const r = await lookFeedOnce({ root, cfg: cfgOn, transport: t, keyword: '徒步', open: true, waitMs: 0 })
+  assert.equal(r.ok, true)
+  assert.match(r.text, /你打开的是第一条/)
+  assert.match(r.text, /画面没截到/)
+  const lines = fs.readFileSync(path.join(root, 'events.jsonl'), 'utf8').trim().split('\n').map((l) => JSON.parse(l))
+  assert.ok(lines.some((e) => String(e.text).startsWith('looked:dy_7703602183127797026')))
+})
