@@ -87,6 +87,10 @@ test('他主动给的名字、她自己改口的叫法都算称呼', () => {
   assert.equal(pickName('以后叫他他吧'), null)
   // 2026-11-04：「他名字的我不拆」被当成给他起名，名字变成「的我不拆」
   assert.equal(pickName('带他名字的我不拆'), null)
+  // 2026-11-04：称呼要认「她自己拍板」的那种说法，并且不把假设置疑当成称呼
+  assert.equal(pickName('我选的是「老大」。'), '老大')
+  assert.equal(pickName('我要是直接叫你煎饼，那是你网名'), null)
+  assert.equal(pickName('你要是就叫我一声，那我应了'), null)
   assert.equal(pickName('他名字的我不拆，别乱叫'), null)
 })
 
