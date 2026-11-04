@@ -144,7 +144,8 @@ test('注册的工具名与说明', async () => {
   assert.equal(regs[0].name, 'douyin_look')
   assert.match(regs[0].description, /推荐流/)
   assert.match(regs[0].description, /按这个词去找/)
-  assert.match(regs[0].description, /没有画面/)
+  assert.match(regs[0].description, /截三帧/)
+  assert.match(regs[0].description, /index/)
 })
 
 test('按词找：走搜索页，从真实链接里抠 id 与文案', () => {

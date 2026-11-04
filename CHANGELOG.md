@@ -1,3 +1,8 @@
+## 0.1.63 — 2026-11-04
+
+- `douyin_look` 的 `open` 真的能拿到画面了：详情接口在搜索页上下文常常返回空（`aweme_detail: null`）或 HTML，所以加一条兜底——打开那一条的页面，从 DOM 读文案、作者和 `video.currentSrc`，再抽三帧。
+- `open` 不再只开第一条：新增 `index`，她要哪条就开哪条。
+
 ## 0.1.62 — 2026-11-04
 
 - 修 `douyin_look` 没挂上：`lib/index.js` 漏了 `import { registerDouyinLook }`，注册时抛 `registerDouyinLook is not defined`，她的工具面里只有名字、没有参数。
