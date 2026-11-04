@@ -8,6 +8,7 @@ import {
   FEED_PATH,
   feedScript,
   normalizeFeed,
+  normalizeSearch,
   renderFeed,
   seenToday,
   lookFeedOnce,
@@ -142,5 +143,36 @@ test('注册的工具名与说明', async () => {
   assert.equal(regs.length, 1)
   assert.equal(regs[0].name, 'douyin_look')
   assert.match(regs[0].description, /推荐流/)
+  assert.match(regs[0].description, /按这个词去找/)
   assert.match(regs[0].description, /没有画面/)
+})
+
+test('按词找：走搜索页，从真实链接里抠 id 与文案', () => {
+  const raw = JSON.stringify([
+    { href: '//www.douyin.com/video/7683459070586405787', txt: '合集 03:27 4.2万 新手徒步入门指南！小白必看' },
+    { href: '//www.douyin.com/video/7703602183127797026', txt: '03:43 262.2万 世界首位徒步绕地球一圈的狠人' },
+    { href: '//www.douyin.com/video/7683459070586405787', txt: '重复的那条' },
+    { href: '//www.douyin.com/user/abc', txt: '不是视频' },
+  ])
+  const items = normalizeSearch(raw)
+  assert.equal(items.length, 2)
+  assert.equal(items[0].id, '7683459070586405787')
+  assert.ok(items[0].desc.startsWith('新手徒步入门指南'))
+  assert.ok(items[1].desc.startsWith('世界首位徒步绕地球一圈'))
+})
+
+test('按词找：走到搜索页，而不是推荐页', async () => {
+  const t = fakeTransport(JSON.stringify([
+    { href: '//www.douyin.com/video/7703602183127797026', txt: '03:43 262.2万 世界首位徒步绕地球一圈的狠人' },
+  ]))
+  const r = await lookFeedOnce({ root: tmpRoot(), cfg: cfgOn, transport: t, keyword: '徒步', waitMs: 0 })
+  assert.equal(r.ok, true)
+  assert.match(t.state.navigated, /\/search\/%E5%BE%92%E6%AD%A5/)
+  assert.match(r.text, /徒步绕地球/)
+})
+
+test('按词找：搜不到就说搜不到，不说"平台没给"', async () => {
+  const r = await lookFeedOnce({ root: tmpRoot(), cfg: cfgOn, transport: fakeTransport('[]'), keyword: '不存在的词', waitMs: 0 })
+  assert.equal(r.ok, false)
+  assert.match(r.note, /什么都没搜到/)
 })
