@@ -198,6 +198,12 @@ test('她说出口的话：只收 text 块，reasoning 不算她说的话', () =
   )
   // 只有 reasoning 的一轮：她没说出口，取到空
   assert.equal(assistantText({ message: { content: [{ type: 'reasoning', text: '想想' }] } }), '')
+  // 只有脚手架的一轮（2026-11-05 真机）：同样取到空，不能把标记当原话
+  assert.equal(
+    assistantText({ message: { content: [{ type: 'text', text: '</｜｜DSML｜｜ invoke>\n</｜｜DSML｜｜ calls>' }] } }),
+    '',
+  )
+  assert.equal(assistantText({ message: { content: [{ type: 'text', text: '已完成' }] } }), '')
   assert.equal(assistantText({ message: { content: '字符串兜底' } }), '字符串兜底')
   assert.equal(assistantText({}), '')
   assert.equal(assistantText(null), '')

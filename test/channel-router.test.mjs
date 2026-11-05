@@ -186,6 +186,24 @@ test('router：填了主人的账号，同一个人在私信里就是「他」�
   await fs.rm(h2.root, { recursive: true, force: true })
 })
 
+test('router：回复里只剩脚手架时，不发也不记（2026-11-05 真机：空的工具块发到了 QQ）', async () => {
+  const cfg = { channels: { qq: { enabled: true, ownerId: '10086' } } }
+  const h = await harness({
+    stage: 1,
+    config: cfg,
+    ownerIds: { qq: '10086' },
+    reply: '</｜｜DSML｜｜ invoke>\n</｜｜DSML｜｜ calls>',
+  })
+  const r = await h.router.handle(groupMsg({ kind: 'dm', conversationId: '10086', personId: 'u_10086', text: '在吗' }))
+  assert.equal(r.sent, false)
+  // 空话在更早一步就按 silent 收掉了；出站那道是兜底，两者都算「没发」
+  assert.ok(['silent', 'scaffold'].includes(r.why), `why=${r.why}`)
+  assert.equal(h.adapter.sent.length, 0, '标记不能出门')
+  const { events } = await readEvents(h.root)
+  assert.equal(events.filter((e) => e.type === 'utterance').length, 0, '标记不能写进她的事件流')
+  await fs.rm(h.root, { recursive: true, force: true })
+})
+
 test('router：主人 uid 是每条现读的，填完立刻生效（2026-11-02 实测踩到）', async () => {
   const cfg = { channels: { qq: { enabled: true, ownerId: '10001' } } }
   let owners = {}

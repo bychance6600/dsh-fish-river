@@ -1,3 +1,8 @@
+## 0.1.68 — 2026-11-05
+
+- 真机（2026-11-05 17:58）：某一轮模型没有开口，只吐了空的工具调用块，正文里留下两行 `</｜｜DSML｜｜ invoke>` / `</｜｜DSML｜｜ calls>`；这两行被当成「她的话」发到了 QQ，也写进了 `events.jsonl`。同一轮界面的状态行（`已完成`、`已完成，用时 2 秒`、`已完成分析`、`思考`）也混在正文里。
+- 修法：`lib/guard.js` 新增 `stripScaffold()`，剥掉 DSML 标记与纯状态行；`lib/channels/router.js` 的 `saidText()` 与出站前各过一遍，剥完为空就当这轮她没说，不发、不记；`lib/turns.js` 的 `assistantText()` 同样处理，事件流与「上次我们说到这」都不再收进标记。
+- 测试 +5：116 个测试文件逐文件独立进程跑，1359 条全绿。
 ## 0.1.67 — 2026-11-05
 
 - 撤掉桌宠（dsh-pet）对接：`lib/pet.js`、`test/pet.test.mjs` 删除，`lib/index.js` 与 `lib/observe.js` 的接线一并去掉。原因：参数 schema 事故之后先退回稳定态，桌宠这条等单独设计（它挂在 DSH 自己的 web 端口上，端口每次启动都变，且 /broadcast 要占锁）。
