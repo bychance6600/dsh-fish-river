@@ -1,3 +1,8 @@
+## 0.1.67 — 2026-11-05
+
+- 撤掉桌宠（dsh-pet）对接：`lib/pet.js`、`test/pet.test.mjs` 删除，`lib/index.js` 与 `lib/observe.js` 的接线一并去掉。原因：参数 schema 事故之后先退回稳定态，桌宠这条等单独设计（它挂在 DSH 自己的 web 端口上，端口每次启动都变，且 /broadcast 要占锁）。
+- 保留 0.1.66 的 `toJsonSchema` 修复（属性级 `required:true` 必须提到根数组）。
+
 ## 0.1.66 — 2026-11-05（修 0.1.65 的严重问题）
 
 - 参数 schema 在「看起来已是标准形态」时被原样放行，属性里的 `required: true` 送进 provider：`Invalid schema for function 'pet_play': true is not of type "array"`。这类坏 schema 会让那一轮**所有**工具调用失败，会话直接答不了话。
