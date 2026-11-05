@@ -39,3 +39,34 @@ test('已是标准形态时幂等（重复包裹不坏）', () => {
 test('空参数表也给出合法的 object schema', () => {
   assert.deepEqual(toJsonSchema({}), { type: 'object', properties: {}, additionalProperties: false })
 })
+
+// 2026-11-05 真机事故：pet_play 的参数写成
+//   { type:'object', properties:{ name:{ type:'string', required:true } } }
+// 上面那条「已是标准形态就原样返回」把它放行了，provider 报
+//   Invalid schema for function 'pet_play': true is not of type "array"
+// 一条坏 schema 会让那一轮所有工具调用一起失败。
+const assertLegal = (schema) => {
+  if (schema?.required !== undefined) assert.ok(Array.isArray(schema.required), '根上的 required 必须是数组')
+  for (const [name, prop] of Object.entries(schema?.properties ?? {})) {
+    assert.equal(prop?.required, undefined, `属性 ${name} 里不许留 required:true`)
+  }
+}
+
+test('写着根 type/properties 的「标准形态」也要把属性级 required 提到根上', () => {
+  const out = toJsonSchema({
+    type: 'object',
+    properties: { name: { type: 'string', required: true, description: '动作名。' } },
+  })
+  assert.deepEqual(out.required, ['name'])
+  assertLegal(out)
+})
+
+test('根上已有 required 数组时保留，不重复推', () => {
+  const out = toJsonSchema({
+    type: 'object',
+    properties: { a: { type: 'string', required: true }, b: { type: 'string' } },
+    required: ['a', 'b'],
+  })
+  assert.deepEqual(out.required, ['a', 'b'])
+  assertLegal(out)
+})

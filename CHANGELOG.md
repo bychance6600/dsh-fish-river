@@ -1,3 +1,9 @@
+## 0.1.66 — 2026-11-05（修 0.1.65 的严重问题）
+
+- 参数 schema 在「看起来已是标准形态」时被原样放行，属性里的 `required: true` 送进 provider：`Invalid schema for function 'pet_play': true is not of type "array"`。这类坏 schema 会让那一轮**所有**工具调用失败，会话直接答不了话。
+- 修法：`toJsonSchema` 对标准形态也做一遍归一（属性级 required 提到根数组、保留已有数组），`lib/pet.js` 的 `parameters` 一律过 `toJsonSchema`。
+- `test/toolschema.test.mjs` 补两条，「标准形态也要归一」与「已有数组不重复推」。
+
 ## 0.1.65 — 2026-11-05
 
 - 接上 DSH 桌宠（`dsh-pet`）三个工具：`pet_state` 看一眼、`pet_say` 把她说的话放上去、`pet_play` 播个动作。只用 `/broadcast` 投喂她自己的字，不用 `/whisper`（那是桌宠自己的模型）；拿锁只拿几秒，说完立刻放；1.5 秒超时、永不抛，桌宠不在时只说「桌上没有那只」。
