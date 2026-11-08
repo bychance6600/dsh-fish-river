@@ -8,7 +8,7 @@
 >
 > 代码仍然留着，MIT，谁想接着改都可以；有什么想问的，去 issue 里说。
 
-**接续**：接下来在 `dsh-roost`（同一作者）里重做——「人格只能长、不能被设定」这个前提不变，改的是渠道层怎么接、材料怎么给。这个仓库保持公开、保持 MIT，代码不再更新。
+**接续**：接下来在 [dsh-roost](https://github.com/bychance6600/dsh-roost)（同一作者）里重做——「人格只能长、不能被设定」这个前提不变，改的是渠道层怎么接、材料怎么给。这个仓库保持公开、保持 MIT，代码不再更新。
 
 
 [![test](https://github.com/bychance6600/dsh-fish-river/actions/workflows/test.yml/badge.svg)](https://github.com/bychance6600/dsh-fish-river/actions/workflows/test.yml)
