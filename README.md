@@ -1,5 +1,14 @@
 # dsh-fish-river · 大肥鱼（合并版）
 
+> ## 这个项目停止维护了
+>
+> 初期想法和理念是这样的：人格只能成长，不能被设定。人格分为两层——立宪层和社会层，用来防止人格在初期被网页或群友带偏；只有社会层才会处理来自网友和群友的影响。成长途径分两块：一是渠道层，也就是你与她的对话；二是材料层，每天她醒来时，把 B 站、抖音推荐的视频给她几个，让她挑选一个，如果她产生想法并说出来，就算成长。用了几天后，人格确实在成长。
+>
+> 但我觉得渠道层的接入方式不太合理。所谓渠道层，就是在初期立宪层阶段决定「谁能影响她」的入口，我的设定是「主人」。这个项目在渠道层接入了太多入口，比如 B 站私聊、抖音私聊，后来想想既臃肿又无用。材料层也只是在她醒来时强行塞给她。在这个项目里，她这样形容：「每次醒来给的内容像报纸一样递到我手里，这不是我挑的，是你给我的。」再加上当时对一些机制和效果考虑不周，所以我考虑重置这个项目，转到隔壁的 dsh-roost。
+>
+> 代码仍然留着，MIT，谁想接着改都可以；有什么想问的，去 issue 里说。
+
+
 [![test](https://github.com/bychance6600/dsh-fish-river/actions/workflows/test.yml/badge.svg)](https://github.com/bychance6600/dsh-fish-river/actions/workflows/test.yml)
 ![license](https://img.shields.io/badge/license-MIT-blue)
 ![node](https://img.shields.io/badge/node-%3E%3D22-brightgreen)
